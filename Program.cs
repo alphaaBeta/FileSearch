@@ -12,7 +12,7 @@ namespace FileSearch
 		static void Main(string[] args)
 		{
 			
-			if (args.Length < 2)
+			if (args.Length < 1)
 			{
 				ShowUsage();
 				return;
@@ -22,10 +22,13 @@ namespace FileSearch
 			bool isRecurse = false;
 			PriorityMode mode = PriorityMode.UnknownManufacturer;
 
-			if (args[1] == "-recurse" || args[1] == "-r")
+			if (args.Length >= 2)
 			{
-				directoryIndex = 2;
-				isRecurse = true;
+				if (args[1] == "-recurse" || args[1] == "-r")
+				{
+					directoryIndex = 2;
+					isRecurse = true;
+				}
 			}
 
 			if (args[0] == "-A")
