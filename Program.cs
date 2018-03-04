@@ -18,6 +18,12 @@ namespace FileSearch
 				return;
 			}
 
+			if(args[0] == "-test")
+			{
+				Tests.CompanyWhitelistTest();
+				return;
+			}
+
 			int directoryIndex = 1;
 			bool isRecurse = false;
 			PriorityMode mode = PriorityMode.UnknownManufacturer;

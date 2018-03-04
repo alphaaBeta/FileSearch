@@ -21,44 +21,60 @@ namespace FileSearch
 			if (isRecurse)
 				searchOption = SearchOption.AllDirectories;
 
-			var exeFilesInfo = from directory in dirs
-							   from file in Directory.GetFiles(directory, "*.exe", searchOption)
+			try
+			{
+
+				var exeFilesInfo = from directory in dirs
+								   from file in Directory.GetFiles(directory, "*.exe", searchOption)
 								   let fInfo = new FileInfo(file)
 								   let fPath = Path.GetFullPath(file)
 								   let fVers = FileVersionInfo.GetVersionInfo(fPath)
-							   select new FileDetails
-							   {
-								   Path = fPath,
-								   LastAccess = fInfo.LastAccessTime,
-								   Size = fInfo.Length,
-								   CompanyName = fVers.CompanyName
-							   };
+								   select new FileDetails
+								   {
+									   Path = fPath,
+									   LastAccess = fInfo.LastAccessTime,
+									   Size = fInfo.Length,
+									   CompanyName = fVers.CompanyName
+								   };
+
 
 			IEnumerable<FileDetails> interestingFiles = null;
 
 			switch (mode)
+				{
+					case PriorityMode.UnknownManufacturer:
+						interestingFiles = from fileInfo in exeFilesInfo
+										   where !(fileInfo.CompanyName == "Microsoft")//TODO: Allow adding a company to whitelist
+										   orderby fileInfo.LastAccess descending
+										   select fileInfo;
+						break;
+
+					case PriorityMode.LeastUsed:
+						interestingFiles = from fileInfo in exeFilesInfo
+										   orderby fileInfo.LastAccess ascending
+										   select fileInfo;
+						break;
+
+					case PriorityMode.RecentUsed:
+						interestingFiles = from fileInfo in exeFilesInfo
+										   orderby fileInfo.LastAccess descending
+										   select fileInfo;
+						break;
+				}
+
+
+				return interestingFiles.ToList();
+
+			}
+			catch (UnauthorizedAccessException e)
 			{
-				case PriorityMode.UnknownManufacturer:
-					interestingFiles = from fileInfo in exeFilesInfo
-									   where !(fileInfo.CompanyName == "Microsoft")//TODO: Allow adding a company to whitelist
-									   orderby fileInfo.LastAccess descending
-									   select fileInfo;
-					break;
-
-				case PriorityMode.LeastUsed:
-					interestingFiles = from fileInfo in exeFilesInfo
-									   orderby fileInfo.LastAccess ascending
-									   select fileInfo;
-					break;
-
-				case PriorityMode.RecentUsed:
-					interestingFiles = from fileInfo in exeFilesInfo
-									   orderby fileInfo.LastAccess descending
-									   select fileInfo;
-					break;
+				Console.WriteLine("Error: {0}\n" +
+									"At: {1}\n Unauthorized Access", e.HResult, e.Source);
+				return null;
 			}
 
-			return interestingFiles.ToList();
+
+
 		}
 
 	}
