@@ -36,30 +36,26 @@ namespace FileSearch
 
 			IEnumerable<FileDetails> interestingFiles = null;
 
-
-			if (mode == PriorityMode.UnknownManufacturer)
+			switch (mode)
 			{
+				case PriorityMode.UnknownManufacturer:
+					interestingFiles = from fileInfo in exeFilesInfo
+									   where !(fileInfo.CompanyName == "Microsoft")//TODO: Allow adding a company to whitelist
+									   orderby fileInfo.LastAccess descending
+									   select fileInfo;
+					break;
 
-				interestingFiles = from fileInfo in exeFilesInfo
-								   where !(fileInfo.CompanyName == "Microsoft")//TODO: Allow adding a company to whitelist
-								   orderby fileInfo.LastAccess descending
-								   select fileInfo;
-			}
+				case PriorityMode.LeastUsed:
+					interestingFiles = from fileInfo in exeFilesInfo
+									   orderby fileInfo.LastAccess ascending
+									   select fileInfo;
+					break;
 
-			else if(mode == PriorityMode.LeastUsed)
-			{
-
-				interestingFiles = from fileInfo in exeFilesInfo
-								   orderby fileInfo.LastAccess ascending
-								   select fileInfo;
-			}
-
-			else if(mode == PriorityMode.RecentUsed)
-			{
-
-				interestingFiles = from fileInfo in exeFilesInfo
-								   orderby fileInfo.LastAccess descending
-								   select fileInfo;
+				case PriorityMode.RecentUsed:
+					interestingFiles = from fileInfo in exeFilesInfo
+									   orderby fileInfo.LastAccess descending
+									   select fileInfo;
+					break;
 			}
 
 			return interestingFiles.ToList();
