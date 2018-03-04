@@ -66,13 +66,11 @@ namespace FileSearch
 
 		}
 
-		static void Print( IEnumerable<FileDetails> list)
+		static void Print( List<FileDetails> list)
 		{
 			Console.WriteLine("Number\tName\tLast Used\tSize\tCompany\tPath");
 			int i = 0;
-			var file = from ffile in list
-					   select ffile;
-			foreach(var ffile in file)
+			foreach(var ffile in list)
 			{
 				Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", i++, Path.GetFileNameWithoutExtension(ffile.Path),
 																ffile.LastAccess, ffile.Size,
