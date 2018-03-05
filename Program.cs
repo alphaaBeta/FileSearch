@@ -18,7 +18,7 @@ namespace FileSearch
 				return;
 			}
 
-			if(args[0] == "-test")
+			if(args[0].Equals("-test"))
 			{
 				Tests.CompanyWhitelistTest();
 				return;
@@ -27,6 +27,9 @@ namespace FileSearch
 			int directoryIndex = 1;
 			bool isRecurse = false;
 			PriorityMode mode = PriorityMode.UnknownManufacturer;
+
+
+			CompanyWhitelist companyWhitelist = null;
 
 			if (args.Length >= 2)
 			{
@@ -37,17 +40,20 @@ namespace FileSearch
 				}
 			}
 
-			if (args[0] == "-A")
+			switch(args[0])
 			{
-				mode = PriorityMode.UnknownManufacturer;
-			}
-			else if (args[0] == "-R")
-			{
-				mode = PriorityMode.RecentUsed;
-			}
-			else if (args[0] == "-L")
-			{
-				mode = PriorityMode.LeastUsed;
+				case ("-A"):
+					mode = PriorityMode.UnknownManufacturer;
+					companyWhitelist = new CompanyWhitelist("whitelist.txt");
+					break;
+
+				case ("-R"):
+					mode = PriorityMode.RecentUsed;
+					break;
+
+				case ("-L"):
+					mode = PriorityMode.LeastUsed;
+					break;
 			}
 
 			var directoriesToSearch = (args.Skip(directoryIndex)).ToList();
@@ -55,7 +61,7 @@ namespace FileSearch
 				directoriesToSearch.Add(Directory.GetCurrentDirectory());
 			
 
-			List<FileDetails> filesFound = Search.SearchDirectories(isRecurse, directoriesToSearch, mode);
+			List<FileDetails> filesFound = Search.SearchDirectories(isRecurse, directoriesToSearch, mode, companyWhitelist);
 
 			Print(filesFound);
 

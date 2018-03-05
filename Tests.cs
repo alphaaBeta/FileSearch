@@ -12,8 +12,8 @@ namespace FileSearch
 
 		public static void CompanyWhitelistTest()
 		{
-			CompanyInfo company1 = new CompanyInfo("XYZ");
-			CompanyInfo company2 = new CompanyInfo("123");
+			string company1 = "XYZ";
+			string company2 = "123";
 
 			CompanyWhitelist companyWhitelist = new CompanyWhitelist();
 

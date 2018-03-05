@@ -15,7 +15,8 @@ namespace FileSearch
 		public static List<FileDetails> SearchDirectories(
 			bool isRecurse,
 			IEnumerable<string> dirs,
-			PriorityMode mode)
+			PriorityMode mode,
+			CompanyWhitelist companyWhitelist = null)
 		{
 			var searchOption = SearchOption.TopDirectoryOnly;
 			if (isRecurse)
@@ -44,7 +45,7 @@ namespace FileSearch
 				{
 					case PriorityMode.UnknownManufacturer:
 						interestingFiles = from fileInfo in exeFilesInfo
-										   where !(fileInfo.CompanyName == "Microsoft")//TODO: Allow adding a company to whitelist
+										   where !(companyWhitelist.Companies.Contains(fileInfo.CompanyName))
 										   orderby fileInfo.LastAccess descending
 										   select fileInfo;
 						break;

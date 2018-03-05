@@ -9,9 +9,9 @@ namespace FileSearch
 {
 	class CompanyWhitelist
 	{
-		List<CompanyInfo> _companies = new List<CompanyInfo>();
+		List<string> _companies = new List<string>();
 
-		public List<CompanyInfo> Companies
+		public List<string> Companies
 		{
 			get
 			{
@@ -23,15 +23,19 @@ namespace FileSearch
 
 		}
 
-		public void AddCompany(string name)
+		public CompanyWhitelist(string fileName)
 		{
-			CompanyInfo companyToBeAdded = new CompanyInfo(name);
-
-			Companies.Add(companyToBeAdded);
+			ReadCompanies(fileName);
 		}
-		public void AddCompany(CompanyInfo companyInfo)
+
+		public CompanyWhitelist()
 		{
-			Companies.Add(companyInfo);
+
+		}
+
+		public void AddCompany(string companyName)
+		{
+			Companies.Add(companyName);
 		}
 
 		public void ReadCompanies(string fileName)
@@ -73,7 +77,7 @@ namespace FileSearch
 
 			foreach (var company in Companies)
 			{ 
-				fileStream.WriteLine(company.CompanyName);
+				fileStream.WriteLine(company);
 			}
 
 			fileStream.Close();
@@ -81,18 +85,4 @@ namespace FileSearch
 		}
 	}
 
-	struct CompanyInfo
-	{
-		public CompanyInfo(string companyName)
-		{
-			CompanyName = companyName;
-		}
-
-		public string CompanyName
-		{
-			get;
-			private set;
-		}
-		
-	}
 }
