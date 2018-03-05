@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="CompanyWhitelist.cs" />
     <Compile Include="FileDetails.cs" />
     <Compile Include="Program.cs" />
